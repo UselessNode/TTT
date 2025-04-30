@@ -8,22 +8,17 @@
 </head>
 <body>
   <main class="game-container">
-    <div class="left-panel">
+    <div class="left-panel" id="left-panel">
       <div class="controls">
-        <button class="new-game" onclick="startGame()">Новая игра</button>
         <div class="settings">
           <div class="input-group">
             <label for="size">Размер:</label>
-            <input type="number" id="size" value="10" min="5" max="25">
+            <input type="range" id="size" value="10" min="5" max="25">
           </div>
           <div class="input-group">
             <label for="mines">Мины:</label>
-            <input type="number" id="mines" value="15" min="5" max="150">
+            <input type="range" id="mines" value="15" min="5" max="150">
           </div>
-        </div>
-        <div class="status-bar">
-          <div class="mines-counter">🚩 <span id="mines-left">0</span></div>
-          <div class="timer">⏱ <span id="timer">00:00</span></div>
         </div>
       </div>
     </div>
@@ -32,7 +27,12 @@
       <div id="board" class="game-board"></div>
     </div>
   </main>
-
+  <div class="status-bar">
+    <div class="mines-counter">🚩 <span id="mines-left">0</span></div>
+    <div class="timer">⏱ <span id="timer">00:00</span></div>
+    <button class="toggle-sidebar" onclick="toggleSidebar()">Сайдбар</button>
+    <button class="new-game" onclick="startGame()">Новая игра</button>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>

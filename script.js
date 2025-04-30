@@ -243,4 +243,9 @@ function showMessage(text) {
     setTimeout(() => modal.remove(), 3000);
 }
 
+function toggleSidebar() {
+    const leftPanel = document.getElementById('left-panel');
+    leftPanel.classList.toggle('collapsed');
+}
+
 window.addEventListener('DOMContentLoaded', startGame);
