@@ -1,38 +1,97 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мини-Сапёр</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини-Сапёр</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="game-container">
-    <div class="left-panel" id="left-panel">
-      <div class="controls">
-        <div class="settings">
-          <div class="input-group">
-            <label for="size">Размер:</label>
-            <input type="range" id="size" value="10" min="5" max="25">
-          </div>
-          <div class="input-group">
-            <label for="mines">Мины:</label>
-            <input type="range" id="mines" value="15" min="5" max="150">
-          </div>
+    <main class="game-container">
+        <div class="left-panel" id="left-panel">
+            <div class="controls">
+                <div class="settings">
+                    <div class="input-group">
+                        <label for="size">Размер:</label>
+                        <input type="range" id="size" value="10" min="5" max="25">
+                        <input type="text" id="size-input" class="fine-tune-input" value="10" pattern="\d+" maxlength="2">
+                    </div>
+                    <div class="input-group">
+                        <label for="mines">Мины:</label>
+                        <input type="range" id="mines" value="15" min="5" max="150">
+                        <input type="text" id="mines-input" class="fine-tune-input" value="15" pattern="\d+" maxlength="3">
+                    </div>
+                    <div class="input-group">
+                        <label for="seed">Сид:</label>
+                        <div class="seed-input">
+                            <span class="seed-part" id="seed-size">10</span>
+                            <span class="seed-part" id="seed-mines">15</span>
+                            <input type="text" id="seed-random-input" class="seed-part-input" value="000000" maxlength="6" pattern="\d{6}" title="Введите 6 цифр">
+                            <button type="button" id="generate-seed-button" title="Сгенерировать новый сид">🎲</button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <button class="toggle-probabilities" id="toggle-probabilities-button">Вывод вероятностей</button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="right-panel">
+            <h1 class="title">САПЁР</h1>
+            <div id="board" class="game-board"></div>
+        </div>
+        <div class="right-info-panel" id="right-info-panel">
+            <div class="info-panel">
+                <div class="info-content-header">Информация</div>
+                <div class="info-content">
+                    <p>Первый клик всегда безопасен: мины размещаются после первого клика, избегая выбранной клетки и её соседей.</p>
+                    <p>Мины генерируются на основе сида и позиции первого клика для воспроизводимости.</p>
+                    <h4>Паттерны</h4>
+                    <div class="hint">
+                        <div class="hint-item-header">B1</div>
+                        <p>Если цифра равна количеству нераскрытых клеток вокруг неё, все эти клетки — мины (вероятность 100%).</p>
+                        <div class="hint-grid game-board">
+                          <div class="cell revealed number-2">2</div>
+                          <div class="cell revealed number-3">3</div>
+                          <div class="cell revealed number-2">2</div>
+                          <div class="cell">🚩</div>
+                          <div class="cell">🚩</div>
+                          <div class="cell">🚩</div>
+                      </div>
+                    </div>
+                    <div class="hint">
+                        <div class="hint-item-header">B2</div>
+                        <p>Если вокруг цифры установлено флагов столько, сколько указано в числе, остальные соседние клетки безопасны и могут быть открыты.</p>
+                        <div class="hint-grid game-board" style="grid-template-columns: repeat(4, var(--cell-size));">
+                          <div class="cell revealed empty"></div>
+                          <div class="cell revealed empty"></div>
+                          <div class="cell revealed number-2">2</div>
+                          <div class="cell">🚩</div>
+                          <div class="cell revealed empty"></div>
+                          <div class="cell revealed empty"></div>
+                          <div class="cell revealed number-3">3</div>
+                          <div class="cell">🚩</div>
+                          <div class="cell revealed number-1">1</div>
+                          <div class="cell revealed number-1">1</div>
+                          <div class="cell revealed number-2">2</div>
+                          <div class="cell">🚩</div>
+                          <div class="cell"></div>
+                          <div class="cell">0</div>
+                          <div class="cell">0</div> 
+                          <div class="cell">0</div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="status-bar">
+        <div class="mines-counter">🚩 <span id="mines-left">0</span></div>
+        <div class="timer">⏱ <span id="timer">00:00</span></div>
+        <button class="toggle-sidebar" id="toggle-sidebar-button">Сайдбар</button>
+        <button class="toggle-info-sidebar" id="toggle-info-sidebar-button">Справка</button>
+        <button class="new-game" id="new-game-button">Новая игра</button>
     </div>
-    <div class="right-panel">
-      <h1 class="title">САПЁР</h1>
-      <div id="board" class="game-board"></div>
-    </div>
-  </main>
-  <div class="status-bar">
-    <div class="mines-counter">🚩 <span id="mines-left">0</span></div>
-    <div class="timer">⏱ <span id="timer">00:00</span></div>
-    <button class="toggle-sidebar" onclick="toggleSidebar()">Сайдбар</button>
-    <button class="new-game" onclick="startGame()">Новая игра</button>
-  </div>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
